@@ -33,7 +33,8 @@ import simplestyle
 tags_to_check = ['{http://www.w3.org/2000/svg}tspan',
 							'{http://www.w3.org/2000/svg}text',
 							'{http://www.w3.org/2000/svg}flowRoot',
-							'{http://www.w3.org/2000/svg}flowPara']
+							'{http://www.w3.org/2000/svg}flowPara',
+							'{http://www.w3.org/2000/svg}flowSpan']
 attributes_to_check = ['font-family', '-inkscape-font-specification']
 
 class ReplaceFont(inkex.Effect):
@@ -50,6 +51,10 @@ class ReplaceFont(inkex.Effect):
 										type="string", dest="replace", 
 										default=None, help="")
 		
+		self.OptionParser.add_option("--selected_only", action="store", 
+										type="inkbool", dest="selected_only", 
+										default=None, help="")
+
 		self.OptionParser.add_option("--every", action="store", 
 										type="inkbool", dest="every", 
 										default=None, help="")
@@ -57,6 +62,7 @@ class ReplaceFont(inkex.Effect):
 		self.OptionParser.add_option("--list_all", action="store", 
 										type="inkbool", dest="list_all", 
 										default=None, help="")
+		self.selected_items = []
 
 	def report_replacements(self, num):
 		if num == 0:
@@ -71,21 +77,36 @@ class ReplaceFont(inkex.Effect):
 
 	def report_findings(self, findings):
 		if len(findings) == 0:
-			inkex.errormsg('Couldn\'t find a single font in this document.')
+			inkex.errormsg('Couldn\'t find a single font in this document/selection.')
 		else:
 			if len(findings) == 1:
 				inkex.errormsg("Found the following font only: %s" % findings[0])
 			else:
 				inkex.errormsg("Found the following fonts:\n%s" % '\n'.join(findings))
 
+	def find_child_text_items(self, node):
+		if node.tag in tags_to_check:
+			self.selected_items.append(node)
+			for child in node:
+				self.find_child_text_items(child)
+
+	def relevant_items(self):
+		if self.options.selected_only:
+			self.selected_items = []
+			for item in self.selected.iteritems():
+				self.find_child_text_items(item[1])
+			return self.selected_items
+		else:
+			return self.document.getroot().getiterator()
+
 	def find_replace(self):
 		replacements_made = 0
-		for el in self.document.getroot().getiterator():
+		for el in self.relevant_items():
 			if el.tag in tags_to_check and 'style' in el.attrib:		
 				replaced = False
 				style_dict = simplestyle.parseStyle(el.attrib['style'])
 				for att in attributes_to_check:
-					if att in style_dict and (style_dict[att] == self.options.find or self.options.every):
+					if att in style_dict and (style_dict[att].strip().lower() == self.options.find or self.options.every):
 						style_dict[att] = self.options.replace
 						el.attrib['style'] = simplestyle.formatStyle(style_dict)
 						replaced = True
@@ -95,7 +116,7 @@ class ReplaceFont(inkex.Effect):
 
 	def list_all(self):
 		fonts_found = []
-		for el in self.document.getroot().getiterator():
+		for el in self.relevant_items():
 			if el.tag in tags_to_check and 'style' in el.attrib:
 				style_dict = simplestyle.parseStyle(el.attrib['style'])
 				for att in attributes_to_check:
@@ -108,7 +129,9 @@ class ReplaceFont(inkex.Effect):
 	def effect(self):
 		if self.options.list_all:
 			self.list_all()
+			sys.exit(0)
 		else:
+			self.options.find = self.options.find.strip().lower()
 			self.find_replace()
 
 if __name__ == "__main__":

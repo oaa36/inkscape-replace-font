@@ -6,11 +6,18 @@
     <dependency type="extension">org.inkscape.output.svg.inkscape</dependency>
     <dependency type="executable" location="extensions">replace_font.py</dependency>
     <dependency type="executable" location="extensions">inkex.py</dependency>
-    
+
     <param name="find" type="string" _gui-text="Find font:"></param>
     <param name="replace" type="string" _gui-text="Replace with:"></param>
-	<param name="every" type="boolean" _gui-text="Replace every font in document regardless of find box">false</param>
-	<param name="list_all" type="boolean" _gui-text="Don't find or replace anything, just list all fonts used">false</param>
+	<_param name="title" type="description" xml:space="preserve">
+</_param>
+	<param name="every" type="boolean" _gui-text="Ignore the 'Find font' box, replace every font possible">false</param>
+	<param name="list_all" type="boolean" _gui-text="List fonts only, don't find or replace anything">false</param>
+	<!--_param name="title" type="description"><br /></_param-->
+	<_param name="title" type="description" xml:space="preserve">
+</_param>
+
+	<param name="selected_only" type="boolean" _gui-text="Apply all of the above rules to selected items only">false</param>
     
     <effect needs-live-preview="false">
                 <object-type>all</object-type>
