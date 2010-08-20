@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inkscape-extension xmlns="http://www.inkscape.org/namespace/inkscape/extension">
+    <_name>Replace font</_name>
+    <id>org.inkscape.replace_font</id>
+    
+    <dependency type="extension">org.inkscape.output.svg.inkscape</dependency>
+    <dependency type="executable" location="extensions">replace_font.py</dependency>
+    <dependency type="executable" location="extensions">inkex.py</dependency>
+    
+    <param name="find" type="string" _gui-text="Find font:"></param>
+    <param name="replace" type="string" _gui-text="Replace with:"></param>
+	<param name="every" type="boolean" _gui-text="Replace every font in document regardless of find box">false</param>
+	<param name="list_all" type="boolean" _gui-text="Don't find or replace anything, just list all fonts used">false</param>
+    
+    <effect needs-live-preview="false">
+                <object-type>all</object-type>
+                <effects-menu>
+                      <submenu _name="Text"/>
+                </effects-menu>
+    </effect>
+    
+    <script>
+        <command reldir="extensions" interpreter="python">replace_font.py</command>
+    </script>
+    
+</inkscape-extension>
