@@ -67,10 +67,11 @@ def find_replace_font(node, find, replace):
 	'''
 	dirty = False
 	style = get_style(node)
-	for att in font_attributes:
-		if att in style and style[att].strip().lower() == find:
-			set_font(node, replace, style)
-			dirty = True
+	if style:
+		for att in font_attributes:
+			if att in style and style[att].strip().lower() == find:
+				set_font(node, replace, style)
+				dirty = True
 	return dirty
 
 def is_styled_text(node):
@@ -92,7 +93,8 @@ def get_style(node):
 	'''
 	Sugar coated way to get style dict from a node
 	'''
-	return simplestyle.parseStyle(node.attrib['style'])
+	if 'style' in node.attrib:
+		return simplestyle.parseStyle(node.attrib['style'])
 
 def set_style(node, style):
 	'''
@@ -123,8 +125,6 @@ def report_replacements(num):
 	'''
 	if num == 0:
 		die('Couldn\'t find anything using that font, please ensure the spelling and spacing is correct.')
-	else:
-		inkex.errormsg("Those fonts were successfully replaced")
 
 def report_findings(findings):
 	'''
