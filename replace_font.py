@@ -109,6 +109,8 @@ def get_fonts(node):
 	'''
 	fonts = []
 	s = get_style(node)
+	if not s:
+		return fonts
 	for a in font_attributes:
 		if a in s:
 			fonts.append(s[a])
