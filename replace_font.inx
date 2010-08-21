@@ -7,18 +7,27 @@
     <dependency type="executable" location="extensions">replace_font.py</dependency>
     <dependency type="executable" location="extensions">inkex.py</dependency>
 
-    <param name="find" type="string" _gui-text="Find font:"></param>
-    <param name="replace" type="string" _gui-text="Replace with:"></param>
-	<_param name="title" type="description" xml:space="preserve">
-</_param>
-	<param name="every" type="boolean" _gui-text="Ignore the 'Find font' box, replace every font possible">false</param>
-	<param name="list_all" type="boolean" _gui-text="List fonts only, don't find or replace anything">false</param>
-	<!--_param name="title" type="description"><br /></_param-->
-	<_param name="title" type="description" xml:space="preserve">
-</_param>
 
-	<param name="selected_only" type="boolean" _gui-text="Apply all of the above rules to selected items only">false</param>
-    
+
+
+ 	<param name="action" type="notebook">
+		<page name="find_replace" _gui-text="Find and Replace font">
+		    <param name="fr_find" type="string" _gui-text="Find this font: "></param>
+		    <param name="fr_replace" type="string" _gui-text="And replace with: "></param>
+		</page>
+		<page name="replace_all" _gui-text="Replace font">
+		    <param name="r_replace" type="string" _gui-text="Replace all fonts with: "></param>
+		</page>
+		<page name="list_only" _gui-text="List all fonts">
+			<_param name="d" type="description">Choose this tab if you would like to see a list of the fonts used/found</_param>
+		</page>
+	</param>	
+
+	<param name="scope" type="optiongroup" _gui-text=" " appearance="minimal">
+		<_option value="entire_document">Work on the entire drawing</_option>
+		<_option value="selection_only">Work on selected objects only</_option>
+	</param>
+
     <effect needs-live-preview="false">
                 <object-type>all</object-type>
                 <effects-menu>
