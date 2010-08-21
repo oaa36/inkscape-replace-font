@@ -51,11 +51,12 @@ def set_font(node, new_font, style=None):
 	dirty = False
 	if not style:
 		style = get_style(node)
-	for att in font_attributes:
-		if att in style:
-			style[att] = new_font
-			set_style(node, style)
-			dirty = True
+	if style:
+		for att in font_attributes:
+			if att in style:
+				style[att] = new_font
+				set_style(node, style)
+				dirty = True
 	return dirty
 
 def find_replace_font(node, find, replace):
