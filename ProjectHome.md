@@ -1,0 +1,1 @@
+This extension helps you find and replace fonts by name. You can either perform a simple find and replace by name, a replace all regardless of what font they are to start with or a listing of all fonts that are currently being used (no replacing). All the above functions can be performed either on the whole document or just a selection.
